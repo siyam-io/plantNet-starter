@@ -1,6 +1,6 @@
 # plantNet - Plant E-Commerce Portal
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Click%20Here-brightgreen?style=for-the-badge)](https://ssiyam0123.github.io/plantNet-starter/)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Click%20Here-brightgreen?style=for-the-badge)](https://siyam-io.github.io/plantNet-starter/)
 [![Server Backend](https://img.shields.io/badge/Backend%20API-Vercel-blue?style=for-the-badge)](https://server-two-kappa-29.vercel.app)
 
 plantNet is a comprehensive plant e-commerce application allowing customers to purchase plants, sellers to list their inventory and manage orders, and admins to oversee users and roles.
