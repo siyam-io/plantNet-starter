@@ -1,11 +1,41 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import DeleteModal from '../../Modal/DeleteModal'
-const SellerOrderDataRow = ({order}) => {
-  const{name, customer,price,quantity,address,status} = order
+import useAxiosSecure from '../../../hooks/useAxiosSecure'
+import toast from 'react-hot-toast'
+
+const SellerOrderDataRow = ({ order, refetch }) => {
+  const { name, customer, price, quantity, address, status, _id, plantId } = order
+  const axiosSecure = useAxiosSecure()
 
   let [isOpen, setIsOpen] = useState(false)
   const closeModal = () => setIsOpen(false)
+
+  const handleStatusChange = async (newStatus) => {
+    try {
+      await axiosSecure.patch(`/orders/status/${_id}`, { status: newStatus })
+      toast.success('Order status updated!')
+      refetch()
+    } catch (err) {
+      toast.error(err.response?.data?.message || err.message)
+    }
+  }
+
+  const handleCancelOrder = async () => {
+    try {
+      await axiosSecure.delete(`/cancelorder/${_id}`)
+      await axiosSecure.patch(`/plants/quantity/${plantId}`, {
+        quantityToUpdate: quantity,
+        status: 'increase'
+      })
+      toast.success('Order cancelled successfully!')
+      refetch()
+    } catch (err) {
+      toast.error(err.response?.data?.message || err.message)
+    } finally {
+      closeModal()
+    }
+  }
 
   return (
     <tr>
@@ -32,6 +62,8 @@ const SellerOrderDataRow = ({order}) => {
         <div className='flex items-center gap-2'>
           <select
             required
+            defaultValue={status}
+            onChange={(e) => handleStatusChange(e.target.value)}
             className='p-1 border-2 border-lime-300 focus:outline-lime-500 rounded-md text-gray-900 whitespace-no-wrap bg-white'
             name='category'
           >
@@ -50,7 +82,7 @@ const SellerOrderDataRow = ({order}) => {
             <span className='relative'>Cancel</span>
           </button>
         </div>
-        <DeleteModal isOpen={isOpen} closeModal={closeModal} />
+        <DeleteModal isOpen={isOpen} closeModal={closeModal} handleYesButton={handleCancelOrder} />
       </td>
     </tr>
   )

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import {
   Dialog,
   Listbox,
@@ -13,10 +13,36 @@ import {
 } from '@headlessui/react'
 import { BsCheckLg } from 'react-icons/bs'
 import { AiOutlineDown } from 'react-icons/ai'
-const roles = ['customer', 'seller', 'admin']
+import useAxiosSecure from '../../hooks/useAxiosSecure'
+import toast from 'react-hot-toast'
 
-const UpdateUserModal = ({ setIsOpen, isOpen }) => {
-  const [selected, setSelected] = useState('')
+const roles = ['Customer', 'Seller', 'Admin']
+
+const UpdateUserModal = ({ setIsOpen, isOpen, user, refetch }) => {
+  const [selected, setSelected] = useState(user?.role || '')
+  const axiosSecure = useAxiosSecure()
+
+  useEffect(() => {
+    if (user?.role) {
+      // capitalize first letter to match dropdown options
+      const roleCapitalized = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+      setSelected(roleCapitalized)
+    }
+  }, [user])
+
+  const handleUpdate = async () => {
+    try {
+      await axiosSecure.patch(`/user/${user?.email}`, {
+        role: selected,
+        status: 'Verified'
+      })
+      toast.success('User role updated successfully!')
+      refetch()
+      setIsOpen(false)
+    } catch (err) {
+      toast.error(err.response?.data?.message || err.message)
+    }
+  }
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
@@ -110,6 +136,7 @@ const UpdateUserModal = ({ setIsOpen, isOpen }) => {
                 <div className='flex mt-2 justify-center gap-5'>
                   <button
                     type='button'
+                    onClick={handleUpdate}
                     className='inline-flex justify-center rounded-md border border-transparent bg-green-100 px-4 py-2 text-sm font-medium text-green-900 hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2'
                   >
                     Update
@@ -133,7 +160,7 @@ const UpdateUserModal = ({ setIsOpen, isOpen }) => {
 
 UpdateUserModal.propTypes = {
   user: PropTypes.object,
-  modalHandler: PropTypes.func,
+  refetch: PropTypes.func,
   setIsOpen: PropTypes.func,
   isOpen: PropTypes.bool,
 }

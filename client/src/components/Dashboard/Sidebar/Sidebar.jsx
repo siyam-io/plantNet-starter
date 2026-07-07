@@ -6,6 +6,7 @@ import { BsGraphUp } from "react-icons/bs";
 import MenuItem from "./Menu/MenuItem";
 
 import useAuth from "../../../hooks/useAuth";
+import useRole from "../../../hooks/useRole";
 
 import AdminMenu from "./Menu/AdminMenu";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,6 +17,7 @@ import { FaHome } from "react-icons/fa";
 const Sidebar = () => {
   const { logOut } = useAuth();
   const [isActive, setActive] = useState(false);
+  const [role, isLoading] = useRole();
   const navigate = useNavigate();
 
   const handelSignOut = async () => {
@@ -78,15 +80,15 @@ const Sidebar = () => {
           <div className="flex flex-col justify-between flex-1 mt-6">
             <nav>
               {/*  Menu Items */}
-              <CustomerMenu />
-              <SellerMenu />
+              {role === "Customer" && <CustomerMenu />}
+              {role === "Seller" && <SellerMenu />}
+              {role === "Admin" && <AdminMenu />}
 
               <MenuItem
                 icon={BsGraphUp}
                 label="Statistics"
                 address="/dashboard"
               />
-              <AdminMenu />
             </nav>
           </div>
         </div>

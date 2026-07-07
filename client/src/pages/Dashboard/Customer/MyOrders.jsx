@@ -1,16 +1,18 @@
 import { Helmet } from "react-helmet-async";
 import CustomerOrderDataRow from "../../../components/Dashboard/TableRows/CustomerOrderDataRow";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const MyOrders = () => {
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const { data: orders = [], refetch } = useQuery({
-    queryKey: ["orders"],
+    queryKey: ["orders", user?.email],
+    enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/myorders/${user?.email}`
+      const res = await axiosSecure.get(
+        `/myorders/${user?.email}`
       );
       return res.data;
     },

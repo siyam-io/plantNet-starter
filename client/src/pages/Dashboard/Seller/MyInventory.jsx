@@ -2,17 +2,20 @@ import { Helmet } from "react-helmet-async";
 import PlantDataRow from "../../../components/Dashboard/TableRows/PlantDataRow";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import useAuth from "../../../hooks/useAuth";
 
 const MyInventory = () => {
+  const { user } = useAuth();
   const {
     data: plants = [],
     isLoading,
     error,
     refetch
   } = useQuery({
-    queryKey: ["inventory"],
+    queryKey: ["inventory", user?.email],
+    enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/plants`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/plants?email=${user?.email}`);
       return res.data;
     },
   });

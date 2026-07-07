@@ -1,3 +1,11 @@
-const { default: axios } = require("axios");
+import axios from "axios";
 
-export axiosPublic = axios.create()
+export const axiosPublic = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
+
+const useAxiosPublic = () => {
+  return axiosPublic;
+};
+
+export default useAxiosPublic;

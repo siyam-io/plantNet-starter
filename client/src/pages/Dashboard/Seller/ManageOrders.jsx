@@ -3,15 +3,17 @@ import { Helmet } from "react-helmet-async";
 import SellerOrderDataRow from "../../../components/Dashboard/TableRows/SellerOrderDataRow";
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../../hooks/useAuth";
-import axios from "axios";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const ManageOrders = () => {
   const { user } = useAuth();
-  const { data: orders=[] } = useQuery({
-    queryKey: [`${user}`],
+  const axiosSecure = useAxiosSecure();
+  const { data: orders = [], refetch } = useQuery({
+    queryKey: ["seller-orders", user?.email],
+    enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/myorders/${user?.email}`
+      const res = await axiosSecure.get(
+        `/seller-orders/${user?.email}`
       );
       return res.data;
     },
@@ -76,7 +78,7 @@ const ManageOrders = () => {
                 </thead>
                 <tbody>
                   {
-                    orders.map((order)=><SellerOrderDataRow key={order._id} order={order} />)
+                    orders.map((order)=><SellerOrderDataRow key={order._id} order={order} refetch={refetch} />)
                   }
                   
                 </tbody>
