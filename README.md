@@ -1,6 +1,6 @@
-# plantNet - Plant E-Commerce Portal
+﻿# plantNet - Plant E-Commerce Portal
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Click%20Here-brightgreen?style=for-the-badge)](https://siyam-io.github.io/plantNet-starter/)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Click%20Here-brightgreen?style=for-the-badge)](https://siyam-plantnet-client.vercel.app//)
 [![Server Backend](https://img.shields.io/badge/Backend%20API-Vercel-blue?style=for-the-badge)](https://server-two-kappa-29.vercel.app)
 
 plantNet is a comprehensive plant e-commerce application allowing customers to purchase plants, sellers to list their inventory and manage orders, and admins to oversee users and roles.
@@ -24,3 +24,4 @@ The backend is deployed to Vercel with configuration specified in `server/vercel
 
 ### Frontend (GitHub Pages)
 The client is compiled with the base path `/plantNet-starter/` and published directly using the `gh-pages` deployment tool.
+
